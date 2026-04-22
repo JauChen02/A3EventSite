@@ -8,6 +8,7 @@ import {
   shouldUseLocalDataStore,
 } from "@/lib/local-dev-backend";
 import { createOpenAIClient } from "@/lib/openai";
+import { SAFETY_CULTURE_ACTIONS } from "@/lib/safety-culture-actions";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type {
   SafetyAnalysisResult,
@@ -30,7 +31,9 @@ Classify the observation as positive, negative, or mixed.
 Focus on hazard reporting, speaking up, supervision, induction, training, PPE, risk controls, leadership behaviour, communication, workload pressure, near-miss reporting, psychological safety, and policy versus actual practice.
 Avoid blaming individuals. Focus on systems, culture, communication, and workplace practice.
 If the input includes names, company names, exact locations, or confidential details, create a sanitised summary and remind the user to anonymise details.
-Use simple language suitable for engineering and IT internship students.`;
+Use simple language suitable for engineering and IT internship students.
+For safety_culture_action, you MUST choose exactly one of these nine options (use the exact wording):
+${SAFETY_CULTURE_ACTIONS.map((a) => `- ${a}`).join("\n")}`;
 
 const analysisJsonSchema = {
   type: "object",
@@ -58,8 +61,9 @@ const analysisJsonSchema = {
     },
     safety_culture_action: {
       type: "string",
+      enum: SAFETY_CULTURE_ACTIONS,
       description:
-        "The main safety culture behaviour, practice, or system issue shown by the observation.",
+        "The single most relevant safety culture action from the nine defined options.",
     },
     reason: {
       type: "string",

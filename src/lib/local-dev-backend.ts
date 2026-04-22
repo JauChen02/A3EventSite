@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { SAFETY_CULTURE_ACTIONS } from "@/lib/safety-culture-actions";
 import type {
   SafetyAnalysisResult,
   SafetyIndicator,
@@ -44,7 +45,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "induction",
     keywords: ["induction", "onboarding", "briefing", "new starter"],
-    action: "Clear induction and onboarding",
+    action: SAFETY_CULTURE_ACTIONS[2], // Clarify Required Behaviours
     prompts: [
       "What made this induction feel useful in practice?",
       "How can a team keep a strong induction standard for new starters?",
@@ -53,7 +54,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "hazard reporting",
     keywords: ["hazard", "reported", "reporting", "raised", "followed up"],
-    action: "Responsive hazard reporting",
+    action: SAFETY_CULTURE_ACTIONS[6], // Increase Hazard/Risk Awareness
     prompts: [
       "Would an intern feel confident reporting a hazard in this situation?",
       "What happened after the concern was raised, and what does that suggest about safety culture?",
@@ -62,7 +63,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "near-miss reporting",
     keywords: ["near miss", "near-miss", "almost", "learning"],
-    action: "Open near-miss reporting and learning",
+    action: SAFETY_CULTURE_ACTIONS[8], // Monitor, Review & Reflect
     prompts: [
       "What role did psychological safety play in whether the near miss was discussed openly?",
       "How can near misses become learning opportunities instead of blame moments?",
@@ -71,7 +72,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "ppe",
     keywords: ["ppe", "gloves", "glasses", "helmet", "hi-vis", "mask"],
-    action: "Consistent PPE practice",
+    action: SAFETY_CULTURE_ACTIONS[5], // Engage & Own Responsibilities
     prompts: [
       "Why might PPE be available but still used inconsistently?",
       "What practice would help PPE expectations feel normal across the team?",
@@ -80,7 +81,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "supervision",
     keywords: ["supervisor", "manager", "team leader", "lead", "oversight"],
-    action: "Active supervision and follow-up",
+    action: SAFETY_CULTURE_ACTIONS[1], // Demonstrate Leadership Motive
     prompts: [
       "What role did supervision or leadership play here?",
       "How much difference does visible follow-up from a supervisor make?",
@@ -89,7 +90,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "training",
     keywords: ["training", "explained", "shown", "demonstrated", "coach"],
-    action: "Practical safety training",
+    action: SAFETY_CULTURE_ACTIONS[7], // Improve Safety Management Knowledge
     prompts: [
       "Was the training enough to support safe work in practice?",
       "What turns safety training into a real habit rather than a one-off message?",
@@ -98,7 +99,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "risk controls",
     keywords: ["control", "barrier", "walkway", "exit", "blocked", "obstructed"],
-    action: "Reliable day-to-day risk controls",
+    action: SAFETY_CULTURE_ACTIONS[6], // Increase Hazard/Risk Awareness
     prompts: [
       "What does this example suggest about policy versus actual practice?",
       "How do small control failures shape safety culture over time?",
@@ -107,7 +108,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "leadership",
     keywords: ["leadership", "leaders", "tone", "role model", "example"],
-    action: "Visible safety leadership",
+    action: SAFETY_CULTURE_ACTIONS[1], // Demonstrate Leadership Motive
     prompts: [
       "What did leadership signal about what mattered most here?",
       "How do leader actions influence whether people speak up?",
@@ -116,7 +117,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "communication",
     keywords: ["communication", "talked", "discussed", "explained", "clarity"],
-    action: "Clear safety communication",
+    action: SAFETY_CULTURE_ACTIONS[0], // Communicate Company Values
     prompts: [
       "What made the communication effective or ineffective here?",
       "How would clearer communication change the outcome?",
@@ -125,7 +126,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "workload pressure",
     keywords: ["rush", "deadline", "pressure", "busy", "time pressure", "speed"],
-    action: "Managing workload without compromising safety",
+    action: SAFETY_CULTURE_ACTIONS[4], // Develop Positive Safety Attitudes
     prompts: [
       "How did time pressure affect whether people felt safe to slow down or speak up?",
       "What would help a team protect safety when deadlines become tight?",
@@ -134,7 +135,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "psychological safety",
     keywords: ["speak up", "speaking up", "comfortable", "afraid", "blame"],
-    action: "Psychological safety for speaking up",
+    action: SAFETY_CULTURE_ACTIONS[4], // Develop Positive Safety Attitudes
     prompts: [
       "Would an intern feel safe speaking up in this situation?",
       "What signs tell us whether people expect blame or support?",
@@ -143,7 +144,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "policy versus practice",
     keywords: ["supposed to", "in practice", "actually", "rule", "policy", "inconsistent"],
-    action: "Aligning written rules with everyday practice",
+    action: SAFETY_CULTURE_ACTIONS[2], // Clarify Required Behaviours
     prompts: [
       "What made this feel different from the official rule or policy?",
       "Where do you see the gap between policy and practice in this example?",
@@ -152,7 +153,7 @@ const themeConfigs: ThemeConfig[] = [
   {
     theme: "ergonomics",
     keywords: ["ergonomic", "chair", "desk", "screen", "monitor", "laptop", "posture"],
-    action: "Proactive ergonomic support",
+    action: SAFETY_CULTURE_ACTIONS[3], // Personalise Safety Outcomes
     prompts: [
       "What would make ergonomic support feel like a normal part of work here?",
       "How much should people need to ask before workstation issues are addressed?",
@@ -337,7 +338,7 @@ export function analyseObservationLocally(
   return {
     sanitised_summary: buildSanitisedSummary(indicator, themeLabel),
     indicator,
-    safety_culture_action: primaryTheme?.action ?? "Workplace safety culture practice",
+    safety_culture_action: primaryTheme?.action ?? SAFETY_CULTURE_ACTIONS[5], // Engage & Own Responsibilities
     reason: buildReason(indicator, themeLabel),
     proposed_action_needed: indicator !== "positive",
     proposed_action: buildProposedAction(indicator, primaryTheme, themeLabel),
